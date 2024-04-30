@@ -1,0 +1,570 @@
+var l2sStatus;
+
+function L2SInit(apiKey, env) {
+    $(function() {
+        l2s.init(apiKey, env, {}, function() {
+            l2s.getLoginStatus(function(status) {
+                l2sStatus = status;
+
+                if (status.logged) {
+                    $(".l2s").toggleClass("logged", true);
+                    $(".l2sLogged").show();
+                    $(".l2s").toggleClass("notlogged", false);
+
+                    $(".l2sUserName").val(status.userView.LastName + ' ' + status.userView.FirstName);
+                } else {
+                    $(".l2s").toggleClass("logged", false);
+                    $(".l2sLogged").hide();
+                    $(".l2s").toggleClass("notlogged", true);
+                }
+            });
+            //document.getElementById("oAuthResponse").innerHTML = "l2s api initialized";
+        });
+    });
+}
+
+function LoadScript(scriptName) {
+    $(function () { $.getScript(scriptName); });
+}
+
+var childControlCollection = new Array();
+
+// validateur .NET marche pas avec placeholder différents
+function crCompareValidate(source, args) {
+    compare = $(source).attr("compare");
+    args.IsValid = (args.Value == $("#" + compare).val());
+}
+
+function crValidateCheckBox(source, args) {
+    var chk= $("#" + $(source).attr("data-control")).is(":checked") ;
+    args.IsValid = chk;
+}
+
+function ForceInputValidation(inputId)
+{
+    var targetedControl = document.getElementById(inputId);
+    if (typeof(targetedControl.Validators) != "undefined") {
+        var i;
+        for (i = 0; i < targetedControl.Validators.length; i++)
+            ValidatorValidate(targetedControl.Validators[i]);
+    }
+ 
+    ValidatorUpdateIsValid();
+}
+
+function isEmpty(obj) {
+    // scalar?
+    if (!obj) return true;
+
+    // Array?
+    if (obj && obj.length > 0) return false;
+    if (obj && obj.length === 0) return true;
+
+    // object?
+    for (var key in obj) if (obj.hasOwnProperty(key)) return false;
+
+    return true;
+}
+
+function qs(url, params) {
+    if (params) {
+        var reg;
+        for (var x in params) {
+            if (url.indexOf(x) > -1) {
+                var str = "[\\?\\&]" + x + "=[^\\&]*";
+                reg = new RegExp(str);
+                url = url.replace(reg, '');
+            }
+        }
+    }
+    return url + (!isEmpty(params) ? (url.indexOf('?') > -1 ? "&" : "?") + param(params) : '');
+}
+
+function param(s) {
+    var b,
+        a = {},
+        m;
+
+    if (typeof (s) === 'string') {
+
+        m = s.replace(/^[\#\?]/, '').match(/([^=\/\&]+)=([^\&]+)/g);
+        if (m) {
+            for (var i = 0; i < m.length; i++) {
+                b = m[i].match(/([^=]+)=(.*)/);
+                a[b[1]] = decodeURIComponent(b[2]);
+            }
+        }
+        return a;
+    }
+    else {
+        var o = s;
+
+        a = [];
+
+        for (var x in o) {
+            if (o.hasOwnProperty(x)) {
+                if (o.hasOwnProperty(x)) {
+                    a.push([x, o[x] === '?' ? '?' : encodeURIComponent(o[x])].join('='));
+                }
+            }
+        }
+
+        return a.join('&');
+    }
+}
+
+function popup(url, redirect_uri, windowWidth, windowHeight) {
+
+    var documentElement = document.documentElement;
+
+    var dualScreenLeft = window.screenLeft !== undefined ? window.screenLeft : screen.left;
+    var dualScreenTop = window.screenTop !== undefined ? window.screenTop : screen.top;
+
+    var width = window.innerWidth || documentElement.clientWidth || screen.width;
+    var height = window.innerHeight || documentElement.clientHeight || screen.height;
+
+    var left = ((width - windowWidth) / 2) + dualScreenLeft;
+    var top = ((height - windowHeight) / 2) + dualScreenTop;
+
+    // Create a function for reopening the popup, and assigning events to the new popup object
+    // This is a fix whereby triggering the
+    var open = function (url) {
+
+        // Trigger callback
+        var popup = window.open(
+            url,
+            '_blank', "scrollbars=yes,resizeable=true,height=" + windowHeight + ",width=" + windowWidth + ",left=" + left + ",top=" + top
+        );
+
+        //
+        // focus on this popup
+        //
+        if (popup && popup.focus) {
+            popup.focus();
+        }
+
+        return popup;
+    };
+
+    return open(url);
+}
+
+
+function DTE_Valid(val) {
+    if (val.length == 0) {
+        return true;
+    }
+
+    try {
+        var ix1 = val.indexOf('/', 0);
+        if (ix1 == 0) return false;
+
+        var ix2 = val.indexOf('/', ix1 + 1);
+        if (ix2 == 0) return false;
+
+        var Da = parseInt(val.substring(0, ix1), '10');
+        var Mn = parseInt(val.substring(ix1 + 1, ix2), '10') - 1;
+        var Yr = parseInt(val.substring(ix2 + 1), '10');
+
+        var dt = new Date(Yr, Mn, Da);
+
+        if (dt.getDate() != Da) {
+            return false;
+        }
+        else if (dt.getMonth() != Mn) {
+            //this is for the purpose JavaScript starts the month from 0
+            return false;
+        }
+        else if (dt.getFullYear() != Yr) {
+            return false;
+        }
+
+        return true;
+    }
+    catch (err) {
+        return false;
+    }
+}
+
+function InitCatalogSlider(elementId) {
+    $('#' + elementId).slick({
+        dots: true,
+        infinite: false,
+        slidesToShow: 8,
+        slidesToScroll: 6,
+        responsive: [
+            {
+                breakpoint: 1500,
+                settings: {
+                    slidesToShow: 6,
+                    slidesToScroll: 3
+                }
+            },
+            {
+                breakpoint: 1024,
+                settings: {
+                    slidesToShow: 4,
+                    slidesToScroll: 3
+                }
+            },
+            {
+                breakpoint: 600,
+                settings: {
+                    slidesToShow: 2,
+                    slidesToScroll: 2
+                }
+            },
+            {
+                breakpoint: 240,
+                settings: {
+                    slidesToShow: 1,
+                    slidesToScroll: 1
+                }
+            }
+        ]
+    });
+
+
+}
+
+function RegisterJQueryRegExpValidator() {
+    $(function() {
+        $.validator.addMethod(
+            "regex",
+            function (value, element, regexp) {
+                var re = new RegExp(regexp);
+                return this.optional(element) || re.test(value);
+            },
+            "Please check your input."
+        );
+    });
+}
+
+function RegisterJQueryDateValidator() {
+    $(function() {
+        $.validator.addMethod("cr-date",
+            function (value, element) {
+                return DTE_Valid(value);
+            },
+            "Please enter a date in the format!"
+        );
+    });
+}
+
+function DTE_Check(source, arguments) {
+    arguments.IsValid = DTE_Valid(arguments.Value);
+}
+
+
+
+
+function CustRequiredIfValidatorEvaluateIsValid(source, arguments) {
+    
+    var controltocompare = source.getAttribute("controltocompare");
+    var triggervalue = source.getAttribute("triggervalue");
+    var triggeroperator = source.getAttribute("triggeroperator");
+
+    
+    if (controltocompare != "") {
+
+        var ctr = document.getElementById(controltocompare);
+
+        
+        var v = GetControlValue(ctr);
+        
+
+        if (v != undefined && ctr.style.visibility != 'hidden') {
+            var isRequired = (triggervalue.length == 0 || v.substring(0, triggervalue.length) == triggervalue);
+
+            if (triggeroperator != "=") {
+                isRequired = !isRequired;
+            }
+
+            
+            //ValidatorTrim(ValidatorGetValue(val.getAttribute("controltovalidate"))) != ValidatorTrim(val.getAttribute("initialvalue"))
+
+            if (isRequired) {
+
+                arguments.IsValid = ValidatorTrim(arguments.Value) != '';
+
+                return;
+            }
+            arguments.IsValid = true;
+        }
+        else {
+            arguments.IsValid = true;
+        }
+    }
+    else {
+        arguments.IsValid = true;
+    }
+}
+
+
+
+
+function RequiredIfValidatorEvaluateIsValid(val) {
+    
+    if (val.controltocompare != "") 
+	{
+        var ctr=document.getElementById(val.controltocompare);
+        var v=GetControlValue(ctr); 
+        
+	    if (v!=undefined && ctr.style.visibility!='hidden') 
+	    { 
+	        var isRequired=(val.triggervalue.length==0 || v.substring(0,val.triggervalue.length) == val.triggervalue);
+	        	        	        
+	        if (val.triggeroperator!="=") 
+	        {
+	            isRequired=!isRequired;
+	        }
+	        
+            if (isRequired) return RequiredFieldValidatorEvaluateIsValid(val);
+            return true;
+	    } 
+	    else 
+	    {
+			return true;
+		}
+	} 
+	else 
+	{ 
+	    return true;
+	}
+}
+
+function ChildControl()
+{
+	this.sourceControlID=null;
+	this.triggerValue=null;
+	this.targetControlID=null;
+	this.recControlID=null;
+	this.operator='=';
+}
+
+var chlSrcCollection=new Array(); // list of source controls
+var chlTrgCollection=new Array(); // list of target controls
+
+function GetControlVisibility(ctrlId,debug)
+{
+    /*if (debug)
+    {
+        var deb=document.getElementById('debug');    
+        deb.innerHTML=deb.innerHTML+"<h1>"+ctrlId+"</h1>";
+    }*/
+
+    
+    var visible=chlTrgCollection[ctrlId]==null?true:false;
+    
+    for (var k in chlTrgCollection[ctrlId])
+    {
+        var chl=chlTrgCollection[ctrlId][k];
+        var curVisible=GetChildControlVisibility(chl);
+
+        visible=visible|curVisible;
+        
+        var par=GetControlVisibility(chl.sourceControlID,false);
+        
+        //if (debug) deb.innerHTML=deb.innerHTML+chl.sourceControlID+": "+curVisible+" - Parent: "+par+"<br/>";
+        
+        // si la source n'est pas visible... la destination ne le sera sur pas...
+        if (!par) return false;
+    }
+    
+    /*if (debug)
+    {
+        deb.innerHTML=deb.innerHTML+"<h2>"+visible+"</h1>";
+    }*/
+    
+    return visible;
+}
+
+function UpdateControlVisibility() {
+    //var deb=document.getElementById('debug');    
+    //deb.innerHTML="";
+   // alert('ok: ' + chlTrgCollection.length);
+
+    for (var k in chlTrgCollection)
+    {
+        var trg = document.getElementById(k);
+        
+        if (trg!=null)
+        {       
+            var visible=GetControlVisibility(k,true);
+            trg.style.visibility=visible?'':'hidden';
+            trg.style.display=visible?'':'none';                    
+        }
+    }
+}
+
+function RegisterCtrlInCollection(collection,ctrlName,toAdd)
+{
+    if (collection[ctrlName]==null)
+    {
+        collection[ctrlName]=new Array();
+    }
+    collection[ctrlName][collection[ctrlName].length]=toAdd;
+}
+
+function RegisterChildControl(sourceControlID,triggerValue,targetControlID,strOperator,recControlID)
+{
+	var toAdd=new ChildControl();
+	toAdd.sourceControlID=sourceControlID;
+	toAdd.triggerValue=triggerValue;
+	toAdd.targetControlID=targetControlID;
+	toAdd.operator=strOperator;
+	toAdd.recControlID=recControlID;   
+
+    RegisterCtrlInCollection(chlSrcCollection,toAdd.sourceControlID,toAdd);
+    RegisterCtrlInCollection(chlTrgCollection,toAdd.targetControlID,toAdd);
+    if (recControlID!=null) RegisterCtrlInCollection(chlTrgCollection,recControlID,toAdd);
+       
+	UpdateControlVisibility();
+}
+
+function left(str, n){
+	if (n <= 0)
+	    return "";
+	else if (n > String(str).length)
+	    return str;
+	else
+	    return String(str).substring(0,n);
+}
+function right(str, n){
+    if (n <= 0)
+       return "";
+    else if (n > String(str).length)
+       return str;
+    else {
+       var iLen = String(str).length;
+       return String(str).substring(iLen, iLen - n);
+    }
+}
+
+
+function GetControlValue(obj)
+{    
+	var options=obj.getElementsByTagName('input');
+    
+    if (obj.checked!=undefined && left(obj.name,5)=='_chk_')
+    {        
+        return obj.checked?'true':'false';
+    }
+            
+    if (obj.value!=undefined) return obj.value;
+        
+    if (obj.tagName=='TABLE')
+    {
+        
+        for(i=0;i<options.length;i++)
+        {
+            var opt = options[i];
+            if(opt.checked) return opt.value;                    
+        }
+    } 
+    else 
+    {
+        return obj.value;
+    }
+    	    
+	return obj.checked?'true':'false';	
+}
+
+
+
+function GetChildControlVisibility(objChildControl)
+{    
+    var toRet=false;
+    
+	var sourceControl=document.getElementById(objChildControl.sourceControlID);		
+	var targetControl=document.getElementById(objChildControl.targetControlID);
+	
+	var recControl=null;
+	if (objChildControl.recControlID!=undefined) 
+	{
+	    recControl=document.getElementById(objChildControl.recControlID);
+	}
+   
+	if (targetControl!=null && sourceControl!=null)
+	{	
+	    var val=GetControlValue(sourceControl);
+	    
+        if (sourceControl.style.visibility=='hidden' || val==undefined)
+        {
+        	toRet=false;		    
+        } 
+        else 
+        {        
+		    toRet= (val.substring(0,objChildControl.triggerValue.length)==objChildControl.triggerValue) == (objChildControl.operator=='=')  ;
+		    //targetControl.style.display=( (val.substring(0,objChildControl.triggerValue.length)==objChildControl.triggerValue) == (objChildControl.operator=='=')  )?'':'none';
+		}
+	}
+	
+	return toRet;
+}
+
+
+function ProcessChangeEvent(objSource)
+{	
+    UpdateControlVisibility();
+}
+
+
+/** Gestion des sessions et redirection  **/
+var sessionStrt=new Date();
+var sessionRedirect=false;
+var sessionRedirectUrl='';
+var sessionDelay=0;
+
+function ChronoSession()
+{            
+    var span=sessionDelay-(new Date().getTime()-sessionStrt.getTime());
+    if (span<0) 
+    {            
+        span=0;
+        if (!sessionRedirect) 
+        {
+            sessionRedirect=true;
+            window.location=sessionRedirectUrl;
+        }
+        
+    }
+    var m=parseInt(span/60000);
+    var s=parseInt((span/1000)%60);
+    
+    $("#dvChrono").html(m+":"+(s<10?"0"+s:s));
+}
+
+function InitChronoSession(delay, url) {
+    sessionDelay=delay;
+    sessionRedirectUrl = url;
+    setInterval(ChronoSession, 1000);
+    
+}
+
+
+
+var caller;
+function EnableDialog() {
+    $(".dialog").dialog({
+        autoOpen: false,
+
+        show: {
+            effect: "blind",
+            duration: 250
+        },
+        hide: {
+            effect: "explode",
+            duration: 250
+        },
+        appendTo: "form",
+        modal: true,
+        width: "600px"
+    }).parent().css('z-index', '1005');
+
+
+    $(".dialogOpen").click(function () {
+        caller = $(this);
+        $("#" + $(this).attr("dialog-name")).dialog("open");
+    });
+}
