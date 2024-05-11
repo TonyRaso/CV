@@ -8,26 +8,77 @@
             .proof-container {
                 margin-top: 20px; /* Adjust the margin-top value as needed */
             }
+
+            .carousel-inner img {
+                width: 100%;
+                height: auto;
+            }
+            #myCarousel {
+                max-width: 400px; /* Set the maximum width of the carousel */
+                margin: auto; /* Center the carousel horizontally */
+            }
         </style>
+        <!-- Bootstrap CSS -->
+        <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+        <!-- jQuery -->
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+        <!-- Bootstrap JS -->
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
     </head>
 
     <div class="container">
-        <h3>Game development</h3>
+        <h3>International Experiences</h3>
         <header class="major">
 
         </header>
         <p class="text-content">
             
-            Game development involves creating interactive experiences through programming, design, and artistic elements. <br>
-            It cultivates skills such as programming proficiency, problem-solving, creativity, collaboration, project management, attention to detail, and adaptability.<br>
-            I started the Unity's Junior Programmer Program and did a few projects on my own.  
+            My semester in Norway for an Erasmus exchange was a whirlwind of enriching experiences that profoundly shaped my personal and professional growth. <br>
+            Engaging in a myriad of activities, from cultural excursions to academic pursuits,<br>
+            I had the privilege of meeting individuals from diverse backgrounds, including Norway, Germany, France, and even Belgium!<br>
+            So many people with whom I stay in touch and that I hope I'll be able to meet again soon !
+            
 
             <div class="proof-container">
-                <h3>Proof</h3> 
-                <a href="https://learn.unity.com/u/60f6c40aedbc2a279c0527c1?tab=profile" target="_blank"> Here's the link to my learning profile on Unity.</a>
-      
-            
+                <div id="myCarousel" class="carousel slide" data-ride="carousel">
+                    <!-- Indicators -->
+                    <ul class="carousel-indicators">
+                      <li data-target="#myCarousel" data-slide-to="0" class="active"></li>
+                      <li data-target="#myCarousel" data-slide-to="1"></li>
+                      <li data-target="#myCarousel" data-slide-to="2"></li>
+                      <li data-target="#myCarousel" data-slide-to="3"></li>
+                      <li data-target="#myCarousel" data-slide-to="4"></li>
+                    </ul>
+                  
+                    <!-- The slideshow -->
+                    <div class="carousel-inner">
+                      <div class="carousel-item active">
+                        <img src="../images/Erasmus/1.jpg" alt="">
+                      </div>
+                      <div class="carousel-item">
+                        <img src="../images/Erasmus/2.jpg" alt="">
+                      </div>
+                      <div class="carousel-item">
+                        <img src="../images/Erasmus/3.jpg" alt="">
+                      </div>
+                      <div class="carousel-item">
+                        <img src="../images/Erasmus/5.jpg" alt="">
+                      </div>
+                      <div class="carousel-item">
+                        <img src="../images/Erasmus/4.jpg" alt="">
+                      </div>
+                    </div>
+                  
+                    <!-- Left and right controls -->
+                    <a class="carousel-control-prev" href="#myCarousel" data-slide="prev">
+                      <span class="carousel-control-prev-icon"></span>
+                    </a>
+                    <a class="carousel-control-next" href="#myCarousel" data-slide="next">
+                      <span class="carousel-control-next-icon"></span>
+                    </a>
+                </div>
             </div>
+
             
         </p>
     </div>
