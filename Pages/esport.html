@@ -3,12 +3,31 @@
         <title>Tony Rasoamanana</title>
         <meta charset="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
-        <link rel="stylesheet" href="../assets/css/main.css" />
+        
         <style>
             .proof-container {
                 margin-top: 20px; /* Adjust the margin-top value as needed */
             }
+
+            .carousel-inner img {
+                display: block;
+                margin-left: auto;
+                margin-right: auto;
+                width: 100%;
+                height: auto;
+            }
+            #myCarousel {
+                max-width: 400px; /* Set the maximum width of the carousel */
+                margin: auto; /* Center the carousel horizontally */
+            }
         </style>
+        <!-- Bootstrap CSS -->
+        <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+        <!-- jQuery -->
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+        <!-- Bootstrap JS -->
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+        <link rel="stylesheet" href="../assets/css/main.css" />
     </head>
 
     <div class="container">
@@ -23,10 +42,31 @@
 
 
             <div class="proof-container">
-                <h3>Proof</h3> 
-                <a href="https://lol.fandom.com/wiki/Astro_Parsity" target="_blank"> Here's the link to my LoL fandom page.</a>
-      
-            
+                <div id="myCarousel" class="carousel slide" data-ride="carousel">
+                    <!-- Indicators -->
+                    <ul class="carousel-indicators">
+                      <li data-target="#myCarousel" data-slide-to="0" class="active"></li>
+                      <li data-target="#myCarousel" data-slide-to="1"></li>
+                    </ul>
+                  
+                    <!-- The slideshow -->
+                    <div class="carousel-inner">
+                      <div class="carousel-item active">
+                        <img src="../images/Esport/ephecwinbsl.png">
+                      </div>
+                      <div class="carousel-item">
+                        <img src="../images/Esport/gamingnights.png">
+                      </div>
+                    </div>
+                  
+                    <!-- Left and right controls -->
+                    <a class="carousel-control-prev" href="#myCarousel" data-slide="prev">
+                      <span class="carousel-control-prev-icon"></span>
+                    </a>
+                    <a class="carousel-control-next" href="#myCarousel" data-slide="next">
+                      <span class="carousel-control-next-icon"></span>
+                    </a>
+                </div>
             </div>
             
         </p>
